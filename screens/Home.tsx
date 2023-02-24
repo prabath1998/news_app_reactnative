@@ -2,14 +2,14 @@
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import React, {useState} from 'react';
 import {Appbar, Chip, Button, useTheme} from 'react-native-paper';
-import {NewsData} from '../utils/types';
+import {ComponentNavigationProps, NewsData} from '../utils/types';
 import CardItem from '../components/CardItem';
 
-const categories = ['Technology', 'Sports', 'Politics', 'Health', 'Business'];
+const categories = ['Technology', 'Sports', 'Politics', 'Health', 'Business','Entertainment'];
 // https://newsdata.io/api/1/news?apikey=pub_17768292a1a0c34c62429fe75212f393b9e47
 const API_KEY = 'pub_17768292a1a0c34c62429fe75212f393b9e47';
 
-const Home = () => {
+const Home = (props: ComponentNavigationProps) => {
   const theme = useTheme();
   const [selectedCategories, setSelectedCategories] = useState<NewsData[]>([]);
   const [newsData, setNewsData] = useState([]);
@@ -34,7 +34,7 @@ const Home = () => {
       await fetch(URL)
         .then(res => res.json())
         .then(data => {
-          setNewsData((prev)=> [...prev, ...data.results]);
+          setNewsData(prev => [...prev, ...data.results]);
           setNextPage(data.nextPage);
         });
     } catch (err) {
@@ -82,19 +82,11 @@ const Home = () => {
         data={newsData}
         renderItem={({item}) => (
           <CardItem
-            category={item.category}
+            navigation={props.navigation}
             content={item.content}
-            country={item.country}
-            creator={item.creator}
             description={item.description}
             image_url={item.image_url}
-            keywords={item.keywords}
-            language={item.language}
-            link={item.link}
-            pubDate={item.pubDate}
-            source_id={item.source_id}
             title={item.title}
-            video_url={item.video_url}
           />
         )}
       />
